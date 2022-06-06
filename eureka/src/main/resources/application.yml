@@ -1,0 +1,16 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: discovery-server
+ 
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: false # Eureka의 registry 등록 여부
+    fetch-registry: false       # Eureka의 registry 에 있는 정보를 가져올 지 여부
+    service-url:
+      defaultZone: https://${eureka.instance.hostname}:${server.port}/eureka/
+      
