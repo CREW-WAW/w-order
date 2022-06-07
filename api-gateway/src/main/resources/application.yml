@@ -13,6 +13,8 @@ spring:
             - Path=/product/**
           filters:
             - RewritePath=/product/?(?<segment>.*), /$\{segment}
+            - AddRequestHeader=token, asdf  # TODO JWT 토큰 인증 개발 이후 변경 예정
+            - AuthGatewayFilter
 eureka:
   instance:
     instance-id: api-gateway-microservice-instance
