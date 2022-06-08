@@ -23,6 +23,14 @@ spring:
             - RewritePath=/order/?(?<segment>.*), /$\{segment}
             - AddRequestHeader=token, asdf  # TODO JWT 토큰 인증 개발 이후 변경 예정
             - AuthGatewayFilter
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/member/**
+          filters:
+            - RewritePath=/member/?(?<segment>.*), /$\{segment}
+            - AddRequestHeader=token, asdf  # TODO JWT 토큰 인증 개발 이후 변경 예정
+            - AuthGatewayFilter
 eureka:
   instance:
     instance-id: api-gateway-microservice-instance
