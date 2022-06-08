@@ -15,6 +15,14 @@ spring:
             - RewritePath=/product/?(?<segment>.*), /$\{segment}
             - AddRequestHeader=token, asdf  # TODO JWT 토큰 인증 개발 이후 변경 예정
             - AuthGatewayFilter
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order/**
+          filters:
+            - RewritePath=/order/?(?<segment>.*), /$\{segment}
+            - AddRequestHeader=token, asdf  # TODO JWT 토큰 인증 개발 이후 변경 예정
+            - AuthGatewayFilter
 eureka:
   instance:
     instance-id: api-gateway-microservice-instance
@@ -23,3 +31,5 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8888/eureka
+      
+
