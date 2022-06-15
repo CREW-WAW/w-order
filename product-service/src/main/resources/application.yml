@@ -1,6 +1,15 @@
 server:
   port: 8083
 
+eureka:
+  instance:
+    instance-id: product-microservice-instance
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8888/eureka
+
 spring:
   application:
     name: product-service
@@ -14,11 +23,5 @@ spring:
     generate-ddl: true
     show-sql: true
 
-eureka:
-  instance:
-    instance-id: product-microservice-instance
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8888/eureka
+logging.level:
+  org.hibernate.SQL: debug

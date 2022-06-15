@@ -8,7 +8,7 @@ import com.waw.service.ProductService;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +20,11 @@ public class ProductRestController {
 
 	private static final Logger logger = LogManager.getLogger(ProductRestController.class);
 
-	@Autowired
-	private ProductService service;
+	private final ProductService service;
+
+	public ProductRestController(ProductService service) {
+		this.service = service;
+	}
 
 	@GetMapping("/info")
 	public ResponseEntity<?> getProduct() {
@@ -36,18 +39,18 @@ public class ProductRestController {
 	}
 
 	@GetMapping("/get/{idx}")
-	public ApiResponseDto getProduct(@PathVariable String idx) {
+	public ApiResponseDto<Object> getProduct(@PathVariable String idx) {
 		ProductResponseDto responseData =  service.selectProduct(idx == null ? "0" : idx);
 		return new ApiResponseDto<>(responseData);
 	}
 
 	@GetMapping("/list")
-	public ApiResponseDto getProductList(String searchType, String searchParam) {
-		List<ProductResponseDto> responseDatas =  service.selectProductList(
+	public ApiResponseDto<Object> getProductList(String searchType, String searchParam) {
+		List<ProductResponseDto> responseData =  service.selectProductList(
 			searchType == null ? "" : searchType, searchParam == null ? "" : searchParam);
 
 		logger.info("searchType :: {}, searchValue :: {}", searchType, searchParam);
-		return new ApiResponseDto<>(responseDatas);
+		return new ApiResponseDto<>(responseData);
 	}
 }
 
