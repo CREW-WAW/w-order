@@ -8,6 +8,7 @@ import lombok.ToString;
 public class ProductRequestDto {
 
     private String productName;
+    private String productContent;
     private String type;
     private int price;
 }

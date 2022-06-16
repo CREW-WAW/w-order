@@ -23,13 +23,17 @@ public class Product {
     private Long id;
 
     private String productName;
+    private String productContent;
     private String type;
     private int price;
+    private String useYn = "Y";
     private LocalDateTime createDate = LocalDateTime.now();
+    private LocalDateTime updateDate = LocalDateTime.now();
 
     @Builder
     public Product(ProductRequestDto productDto) {
         this.productName = productDto.getProductName();
+        this.productContent = productDto.getProductContent();
         this.type = productDto.getType();
         this.price = productDto.getPrice();
     }

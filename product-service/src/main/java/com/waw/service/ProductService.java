@@ -11,10 +11,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import static com.waw.entity.QProduct.*;
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
+@Slf4j
 @Service
 public class ProductService {
 
@@ -26,6 +29,36 @@ public class ProductService {
         this.repo = repo;
     }
 
+    public ProductResponseDto selectProduct(String idx) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+        return new ProductResponseDto(
+            Objects.requireNonNull(
+                queryFactory.selectFrom(product).where(product.useYn.eq("Y").and(product.id.eq(Long.valueOf(idx))))
+                    .fetchOne()));
+    }
+
+    public List<ProductResponseDto> selectProductList(String searchType, String searchParam) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        BooleanBuilder builder = new BooleanBuilder().and(product.useYn.eq("Y"));
+
+        switch (searchType) {
+            case "type":
+                builder.and(product.type.eq(searchParam));
+                break;
+            case "price":
+                try {
+                    builder.and(product.price.loe(Integer.valueOf(searchParam)));
+                } catch (NumberFormatException e) {
+                    log.error("Error, Price 값 확인");
+                }
+                break;
+        }
+
+        return queryFactory.selectFrom(product).where(builder).fetch().stream()
+            .map(ProductResponseDto::new).collect(Collectors.toList());
+    }
+
     @Transactional
     public ProductResponseDto insertProductData(ProductRequestDto dto) {
         Product resProduct = repo.save(Product.builder().productDto(dto).build());
@@ -33,27 +66,23 @@ public class ProductService {
         return new ProductResponseDto(resProduct);
     }
 
-    public ProductResponseDto selectProduct(String idx) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+    @Transactional
+    public ProductResponseDto updateProductData(String idx, ProductRequestDto dto) {
+        Product targetProduct = Product.builder().productDto(dto).build();
+        targetProduct.setId(Long.valueOf(idx));
 
-        return new ProductResponseDto(
-            Objects.requireNonNull(
-                queryFactory.selectFrom(product).where(product.id.eq(Long.valueOf(idx)))
-                    .fetchOne()));
+        Product resProduct = repo.save(targetProduct);
+
+        return new ProductResponseDto(resProduct);
     }
 
-    public List<ProductResponseDto> selectProductList(String type, String param) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-        BooleanBuilder builder = new BooleanBuilder();
+    @Transactional
+    public ProductResponseDto deleteProductData(String idx) {
+        Product targetProduct = repo.findById(Long.valueOf(idx)).get();
+        targetProduct.setUseYn("N");
 
-        switch (type) {
-            case "type":
-                builder.and(product.type.eq(param));
-            case "price":
-                builder.and(product.price.loe(Integer.valueOf(param)));
-        }
+        Product resProduct = repo.save(targetProduct);
 
-        return queryFactory.selectFrom(product).where(builder).fetch().stream()
-            .map(ProductResponseDto::new).collect(Collectors.toList());
+        return new ProductResponseDto(resProduct);
     }
 }
