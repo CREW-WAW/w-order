@@ -7,7 +7,7 @@ import lombok.ToString;
 @ToString
 public class OrderRequestDto {
 
-    private String productName;
-    private String type;
-    private int price;
+    private int orderNum;
+    private int totalPrice;
+    private String userId;
 }

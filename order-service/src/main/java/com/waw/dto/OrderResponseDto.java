@@ -8,15 +8,17 @@ import lombok.ToString;
 @ToString
 public class OrderResponseDto {
 
-    private Long productId;
-    private String productName;
-    private String type;
-    private int price;
+    private Long orderNum;
+    private Long totalPrice;
+    private String userId;
+    private String createDate;
+    private String updateDate;
 
     public OrderResponseDto(Order order) {
-        this.productId = order.getId();
-        this.productName = order.getProductName();
-        this.type = order.getType();
-        this.price = order.getPrice();
+        this.orderNum = order.getOrderNum();
+        this.totalPrice = order.getTotalPrice();
+        this.userId = order.getUserId();
+        this.createDate = String.valueOf(order.getCreateDate());
+        this.updateDate = String.valueOf(order.getUpdateDate());
     }
 }

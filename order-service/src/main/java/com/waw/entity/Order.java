@@ -17,17 +17,17 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String productName;
-    private String type;
-    private int price;
+    private long orderNum;
+    private long totalPrice;
+    private String userId;
     private LocalDateTime createDate = LocalDateTime.now();
+    private LocalDateTime updateDate = LocalDateTime.now();
 
     @Builder
     public Order(OrderRequestDto orderDto) {
-        this.productName = orderDto.getProductName();
-        this.type = orderDto.getType();
-        this.price = orderDto.getPrice();
+        this.orderNum = orderDto.getOrderNum();
+        this.totalPrice = orderDto.getTotalPrice();
+        this.userId = orderDto.getUserId();
     }
+
 }
