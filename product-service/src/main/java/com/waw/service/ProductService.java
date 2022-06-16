@@ -1,6 +1,8 @@
 package com.waw.service;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.waw.dto.ProductRequestDto;
 import com.waw.dto.ProductResponseDto;
 import com.waw.entity.Product;
 import com.waw.entity.ProductRepository;
@@ -25,9 +27,10 @@ public class ProductService {
     }
 
     @Transactional
-    public int insertProductData(Product product) {
-        repo.save(product);
-        return 1;
+    public ProductResponseDto insertProductData(ProductRequestDto dto) {
+        Product resProduct = repo.save(Product.builder().productDto(dto).build());
+
+        return new ProductResponseDto(resProduct);
     }
 
     public ProductResponseDto selectProduct(String idx) {
@@ -41,8 +44,16 @@ public class ProductService {
 
     public List<ProductResponseDto> selectProductList(String type, String param) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        BooleanBuilder builder = new BooleanBuilder();
 
-        return queryFactory.selectFrom(product).fetch().stream()
+        switch (type) {
+            case "type":
+                builder.and(product.type.eq(param));
+            case "price":
+                builder.and(product.price.loe(Integer.valueOf(param)));
+        }
+
+        return queryFactory.selectFrom(product).where(builder).fetch().stream()
             .map(ProductResponseDto::new).collect(Collectors.toList());
     }
 }

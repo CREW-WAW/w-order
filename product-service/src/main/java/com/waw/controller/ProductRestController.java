@@ -3,7 +3,6 @@ package com.waw.controller;
 import com.waw.common.ApiResponseDto;
 import com.waw.dto.ProductRequestDto;
 import com.waw.dto.ProductResponseDto;
-import com.waw.entity.Product;
 import com.waw.service.ProductService;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -34,8 +33,8 @@ public class ProductRestController {
 	}
 
 	@PostMapping("/insert")
-	public int insertProduct(@RequestBody ProductRequestDto request) {
-		return service.insertProductData(Product.builder().productDto(request).build());
+	public ApiResponseDto<Object> insertProduct(@RequestBody ProductRequestDto request) {
+		return new ApiResponseDto<>(service.insertProductData(request));
 	}
 
 	@GetMapping("/get/{idx}")
