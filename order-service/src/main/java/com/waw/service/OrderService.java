@@ -1,10 +1,12 @@
 package com.waw.service;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.waw.common.ApiResponseDto;
+import com.waw.dto.OrderRequestDto;
 import com.waw.dto.OrderResponseDto;
-import com.waw.entity.OrderRepository;
 import com.waw.entity.Order;
 import com.waw.entity.OrderRepository;
+import net.bytebuddy.implementation.bind.MethodDelegationBinder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -26,18 +28,12 @@ public class OrderService {
         this.repo = repo;
     }
 
-    @Transactional
-    public int insertOrderData(Order order) {
-        repo.save(order);
-        return 1;
-    }
-
     public OrderResponseDto selectOrder(String idx) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         return new OrderResponseDto(
             Objects.requireNonNull(
-                queryFactory.selectFrom(order).where(order.id.eq(Long.valueOf(idx)))
+                queryFactory.selectFrom(order).where(order.orderNum.eq(Long.valueOf(idx)))
                     .fetchOne()));
     }
 
@@ -47,4 +43,24 @@ public class OrderService {
         return queryFactory.selectFrom(order).fetch().stream()
             .map(OrderResponseDto::new).collect(Collectors.toList());
     }
+
+    @Transactional
+    public OrderResponseDto insertOrderData(OrderRequestDto order,int idx) {
+        order.setOrderNum(idx);
+        Order resOrder = repo.save(Order.builder().orderDto(order).build());
+        return new OrderResponseDto(resOrder);
+    }
+
+    @Transactional
+    public void deleteOrderData(int idx){
+        Order findOrder = repo.findById(Long.valueOf(idx)).get();
+        repo.delete(findOrder);
+    }
+
+   /* @Transactional
+    public void updateOrderData(OrderRequestDto order, int idx){
+        Order findOrder = repo.findById(Long.valueOf(idx)).get();
+        repo.delete(findOrder);
+    }*/
+
 }
