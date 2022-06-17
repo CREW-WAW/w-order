@@ -1,6 +1,8 @@
 package com.waw.service;
 
+import com.ctc.wstx.util.StringUtil;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.waw.dto.ProductRequestDto;
 import com.waw.dto.ProductResponseDto;
@@ -21,25 +23,22 @@ import static com.waw.entity.QProduct.*;
 @Service
 public class ProductService {
 
-    private final EntityManager em;
+    private final JPAQueryFactory queryFactory;
     private final ProductRepository repo;
 
     public ProductService(EntityManager em, ProductRepository repo) {
-        this.em = em;
+        this.queryFactory =  new JPAQueryFactory(em);
         this.repo = repo;
     }
 
     public ProductResponseDto selectProduct(String idx) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-
         return new ProductResponseDto(
             Objects.requireNonNull(
-                queryFactory.selectFrom(product).where(product.useYn.eq("Y").and(product.id.eq(Long.valueOf(idx))))
+                queryFactory.selectFrom(product).where(product.useYn.eq("Y").and(product.idx.eq(Long.valueOf(idx))))
                     .fetchOne()));
     }
 
     public List<ProductResponseDto> selectProductList(String searchType, String searchParam) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         BooleanBuilder builder = new BooleanBuilder().and(product.useYn.eq("Y"));
 
         switch (searchType) {
@@ -69,7 +68,7 @@ public class ProductService {
     @Transactional
     public ProductResponseDto updateProductData(String idx, ProductRequestDto dto) {
         Product targetProduct = Product.builder().productDto(dto).build();
-        targetProduct.setId(Long.valueOf(idx));
+        targetProduct.setIdx(Long.valueOf(idx));
 
         Product resProduct = repo.save(targetProduct);
 

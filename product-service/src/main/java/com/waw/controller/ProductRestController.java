@@ -5,8 +5,7 @@ import com.waw.dto.ProductRequestDto;
 import com.waw.dto.ProductResponseDto;
 import com.waw.service.ProductService;
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +15,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 public class ProductRestController {
-
-	private static final Logger logger = LogManager.getLogger(ProductRestController.class);
 
 	private final ProductService service;
 
@@ -29,8 +27,8 @@ public class ProductRestController {
 
 	@GetMapping("/info")
 	public ResponseEntity<?> getProduct() {
-		logger.info("getProduct start");
-		logger.info("getProduct end");
+		log.info("getProduct start");
+		log.info("getProduct end");
 		return ResponseEntity.ok("return product.");
 	}
 

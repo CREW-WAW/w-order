@@ -8,14 +8,14 @@ import lombok.ToString;
 @ToString
 public class ProductResponseDto {
 
-    private Long productId;
+    private Long productIdx;
     private String productName;
     private String productContent;
     private String type;
     private int price;
 
     public ProductResponseDto(Product product) {
-        this.productId = product.getId();
+        this.productIdx = product.getIdx();
         this.productName = product.getProductName();
         this.productContent = product.getProductContent();
         this.type = product.getType();
