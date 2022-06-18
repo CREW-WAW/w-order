@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.waw.common.ApiResponseDto;
 import com.waw.domain.Member;
 import com.waw.service.MemberService;
 
@@ -23,13 +23,11 @@ public class MemberRestController {
 	
 	private static final Logger logger = LogManager.getLogger(MemberRestController.class);
 
-	@ResponseBody
 	@GetMapping("/info/{idx}")
-	public ResponseEntity<?> get(@PathVariable("idx") long idx) {
-		return new ResponseEntity<>(memberService.get(idx), HttpStatus.OK);
+	public ApiResponseDto<?> get(@PathVariable("idx") long idx) {
+		return new ApiResponseDto<>(memberService.get(idx));
 	}
 	
-	@ResponseBody
 	@PostMapping("/save")
 	public ResponseEntity<?> save(Member member) {
 		memberService.save(member);
