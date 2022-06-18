@@ -1,7 +1,5 @@
 package com.waw.dto;
 
-import java.time.LocalDate;
-
 import com.waw.domain.Member;
 
 import lombok.Getter;
@@ -13,7 +11,7 @@ public class MemberResponseDto {
 
 	private long idx;
 	private String loginId;
-	private LocalDate birthDay;
+	private String birthDay;
 	private String phoneNumber;
 	private String name;
 	

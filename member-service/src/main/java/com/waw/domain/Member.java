@@ -1,7 +1,5 @@
 package com.waw.domain;
 
-import java.time.LocalDate;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,7 +16,6 @@ import lombok.Setter;
 @Entity(name = "TB_MEMBER")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
@@ -26,7 +23,7 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long idx;
 	private String loginId;
-	private LocalDate birthDay;
+	private String birthDay;
 	private String phoneNumber;
 	private String name;
 	 

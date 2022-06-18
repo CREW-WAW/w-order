@@ -31,13 +31,7 @@ public class MemberService {
 	
 	@Transactional
 	public MemberResponseDto save(MemberRequestDto memberDto) {
-		Member member = memberRepository.save(Member.builder()
-				.birthDay(memberDto.getBirthDay())
-				.loginId(memberDto.getLoginId())
-				.name(memberDto.getName())
-				.phoneNumber(memberDto.getPhoneNumber())
-				.build());
-		
+		Member member = memberRepository.save(Member.builder().memberDto(memberDto).build());
 		return new MemberResponseDto(member);
 	}
 	
