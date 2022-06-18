@@ -14,8 +14,8 @@ spring:
   application:
     name: order-service
   datasource:
-    url: jdbc:log4jdbc:mysql://localhost:3306/waw?useUnicode=true&characterEncoding=utf8&useSSL=false
-    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:mysql://localhost:3306/waw?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimeZone=Asia/Seoul
+    driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 'Ckdals0540@'
   jpa:

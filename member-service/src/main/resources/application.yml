@@ -4,6 +4,18 @@ server:
 spring:
   application:
     name: member-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/waw?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimeZone=Asia/Seoul
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 'Password1!'
+  jpa:
+    database: mysql
+    generate-ddl: true
+    show-sql: true
+
+logging.level:
+  org.hibernate.SQL: debug
 
 eureka:
   instance:
