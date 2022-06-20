@@ -45,19 +45,19 @@ public class OrderRestController {
 	}
 
 	@DeleteMapping("/deleteOrder/{idx}")
-	public void deleteOrder(@PathVariable int idx){
-		service.deleteOrderData(idx);
+	public String deleteOrder(@PathVariable int idx){
+		return service.deleteOrderData(idx);
 	}
 
 	@PostMapping("/insertOrder/{idx}")
 	public ApiResponseDto insertOrder(@RequestBody OrderRequestDto request, @PathVariable int idx) {
 		return new ApiResponseDto(service.insertOrderData(request,idx));
 	}
-/*
-	@PutMapping("/updateOrder/{idx}")
-	public void updateOrder(@RequestBody OrderRequestDto request, @PathVariable int idx){
-		service.updateOrderData(request,idx);
-	}*/
+//
+//	@PutMapping("/updateOrder/{idx}")
+//	public void updateOrder(@RequestBody OrderRequestDto request, @PathVariable int idx){
+//		service.updateOrderData(request,idx);
+//	}
 }
 
 

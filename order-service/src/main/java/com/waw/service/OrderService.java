@@ -47,14 +47,25 @@ public class OrderService {
     @Transactional
     public OrderResponseDto insertOrderData(OrderRequestDto order,int idx) {
         order.setOrderNum(idx);
-        Order resOrder = repo.save(Order.builder().orderDto(order).build());
-        return new OrderResponseDto(resOrder);
+        if(repo.findById(Long.valueOf(idx)).isPresent()){
+            return null;
+        } else {
+           Order resOrder = repo.save(Order.builder().orderDto(order).build());
+           return new OrderResponseDto(resOrder);
+        }
     }
 
     @Transactional
-    public void deleteOrderData(int idx){
-        Order findOrder = repo.findById(Long.valueOf(idx)).get();
-        repo.delete(findOrder);
+    public String deleteOrderData(int idx){
+        String result = "";
+        if(repo.findById(Long.valueOf(idx)).isPresent()){
+            Order findOrder = repo.findById(Long.valueOf(idx)).get();
+            repo.delete(findOrder);
+            result = "성공";
+        } else {
+            result = "실패";
+        }
+        return result;
     }
 
    /* @Transactional
