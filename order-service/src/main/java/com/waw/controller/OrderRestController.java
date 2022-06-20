@@ -1,6 +1,6 @@
 package com.waw.controller;
 
-import com.waw.common.ApiResponseDto;
+import com.waw.exception.ApiResponseDto;
 import com.waw.dto.OrderRequestDto;
 import com.waw.dto.OrderResponseDto;
 import com.waw.entity.Order;

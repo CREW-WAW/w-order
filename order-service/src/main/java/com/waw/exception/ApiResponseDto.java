@@ -1,4 +1,4 @@
-package com.waw.common;
+package com.waw.exception;
 
 import lombok.Getter;
 import lombok.Setter;

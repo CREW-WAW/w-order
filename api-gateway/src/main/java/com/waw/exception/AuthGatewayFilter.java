@@ -1,4 +1,4 @@
-package com.waw.common;
+package com.waw.exception;
 
 import java.util.List;
 import java.util.Objects;

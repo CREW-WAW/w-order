@@ -1,8 +1,6 @@
 package com.waw.service;
 
-import com.ctc.wstx.util.StringUtil;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.waw.dto.ProductRequestDto;
 import com.waw.dto.ProductResponseDto;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import static com.waw.entity.QProduct.*;
 
-@SuppressWarnings("OptionalGetWithoutIsPresent")
 @Slf4j
 @Service
 public class ProductService {

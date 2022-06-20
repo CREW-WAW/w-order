@@ -1,11 +1,13 @@
 package com.waw.controller;
 
-import com.waw.common.ApiResponseDto;
+import com.waw.dto.ApiResponseDto;
 import com.waw.dto.ProductRequestDto;
 import com.waw.dto.ProductResponseDto;
 import com.waw.service.ProductService;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,54 +19,57 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class ProductRestController {
 
-	private final ProductService service;
+    private final ProductService service;
 
-	public ProductRestController(ProductService service) {
-		this.service = service;
-	}
+    @GetMapping("/info")
+    public ResponseEntity<?> getProduct() {
+        log.info("getProduct start");
+        log.info("getProduct end");
+        return ResponseEntity.ok("return product.");
+    }
 
-	@GetMapping("/info")
-	public ResponseEntity<?> getProduct() {
-		log.info("getProduct start");
-		log.info("getProduct end");
-		return ResponseEntity.ok("return product.");
-	}
+    @GetMapping("/get/{idx}")
+    public ResponseEntity<ApiResponseDto<Object>> getProduct(@PathVariable String idx) {
+        ProductResponseDto responseData = service.selectProduct(idx == null ? "0" : idx);
 
-	@GetMapping("/get/{idx}")
-	public ApiResponseDto<Object> getProduct(@PathVariable String idx) {
-		ProductResponseDto responseData =  service.selectProduct(idx == null ? "0" : idx);
+        return new ResponseEntity<>(new ApiResponseDto<>(responseData), HttpStatus.OK);
+    }
 
-		return new ApiResponseDto<>(responseData);
-	}
+    @GetMapping("/list")
+    public ResponseEntity<ApiResponseDto<Object>> getProductList(String searchType,
+        String searchParam) {
+        List<ProductResponseDto> responseData = service.selectProductList(
+            searchType == null ? "" : searchType,
+            searchParam == null ? "" : searchParam);
 
-	@GetMapping("/list")
-	public ApiResponseDto<Object> getProductList(String searchType, String searchParam) {
-		List<ProductResponseDto> responseData =  service.selectProductList(
-			searchType == null ? "" : searchType,
-			searchParam == null ? "" : searchParam);
+        return new ResponseEntity<>(new ApiResponseDto<>(responseData), HttpStatus.OK);
+    }
 
-		return new ApiResponseDto<>(responseData);
-	}
+    @PostMapping("/insert")
+    public ResponseEntity<ApiResponseDto<Object>> insertProduct(
+        @RequestBody ProductRequestDto request) {
 
-	@PostMapping("/insert")
-	public ApiResponseDto<Object> insertProduct(@RequestBody ProductRequestDto request) {
+        return new ResponseEntity<>(new ApiResponseDto<>(service.insertProductData(request)),
+            HttpStatus.OK);
+    }
 
-		return new ApiResponseDto<>(service.insertProductData(request));
-	}
+    @PutMapping("/update/{idx}")
+    public ResponseEntity<ApiResponseDto<Object>> updateProduct(@PathVariable String idx,
+        @RequestBody ProductRequestDto request) {
 
-	@PutMapping("/update/{idx}")
-	public ApiResponseDto<Object> updateProduct(@PathVariable String idx, @RequestBody ProductRequestDto request) {
+        return new ResponseEntity<>(new ApiResponseDto<>(service.updateProductData(idx, request)),
+            HttpStatus.OK);
+    }
 
-		return new ApiResponseDto<>(service.updateProductData(idx, request));
-	}
+    @DeleteMapping("/delete/{idx}")
+    public ResponseEntity<ApiResponseDto<Object>> deleteProduct(@PathVariable String idx) {
 
-	@DeleteMapping("/delete/{idx}")
-	public ApiResponseDto<Object> deleteProduct(@PathVariable String idx) {
-
-		return new ApiResponseDto<>(service.deleteProductData(idx));
-	}
+        return new ResponseEntity<>(new ApiResponseDto<>(service.deleteProductData(idx)),
+            HttpStatus.OK);
+    }
 }
 
 
