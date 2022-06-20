@@ -56,7 +56,7 @@ public class OrderService {
     }
 
     @Transactional
-    public String deleteOrderData(int idx){
+    public String deleteOrderData(int idx) {
         String result = "";
         if(repo.findById(Long.valueOf(idx)).isPresent()){
             Order findOrder = repo.findById(Long.valueOf(idx)).get();
@@ -68,10 +68,15 @@ public class OrderService {
         return result;
     }
 
-   /* @Transactional
-    public void updateOrderData(OrderRequestDto order, int idx){
-        Order findOrder = repo.findById(Long.valueOf(idx)).get();
-        repo.delete(findOrder);
-    }*/
+    @Transactional
+    public OrderResponseDto updateOrderData(OrderRequestDto order, int idx) {
+        order.setOrderNum(idx);
+        if(repo.findById(Long.valueOf(idx)).isPresent()){
+            Order resOrder = repo.save(Order.builder().orderDto(order).build());
+            return new OrderResponseDto(resOrder);
+        } else {
+            return null;
+        }
+    }
 
 }

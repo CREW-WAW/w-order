@@ -53,11 +53,11 @@ public class OrderRestController {
 	public ApiResponseDto insertOrder(@RequestBody OrderRequestDto request, @PathVariable int idx) {
 		return new ApiResponseDto(service.insertOrderData(request,idx));
 	}
-//
-//	@PutMapping("/updateOrder/{idx}")
-//	public void updateOrder(@RequestBody OrderRequestDto request, @PathVariable int idx){
-//		service.updateOrderData(request,idx);
-//	}
+
+	@PutMapping("/updateOrder/{idx}")
+	public ApiResponseDto updateOrder(@RequestBody OrderRequestDto request, @PathVariable int idx) {
+		return new ApiResponseDto(service.updateOrderData(request,idx));
+	}
 }
 
 
