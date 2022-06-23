@@ -12,20 +12,30 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> exceptionHandler(Exception e) {
-        log.error("========= Method Not Allowed =========");
         final ErrorResponseDto response = ErrorResponseDto.create()
-            .status(HttpStatus.METHOD_NOT_ALLOWED.value()).message(e.getMessage());
+            .status(HttpStatus.INTERNAL_SERVER_ERROR.value()).code("SYSTEM").message(e.getMessage());
 
-        return new ResponseEntity<>(response, HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<ErrorResponseDto> productExceptionHandler(ProductNotFoundException e) {
+    @ExceptionHandler(ProductListNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> productListNotFountExceptionHandler(
+        ProductListNotFoundException e) {
         final ErrorResponseDto response = ErrorResponseDto.create()
             .code(ErrorCode.PRODUCT_NOT_FOUND.getCode())
             .status(ErrorCode.PRODUCT_NOT_FOUND.getStatus())
             .message(ErrorCode.PRODUCT_NOT_FOUND.getMessage());
 
-        return new ResponseEntity<>(response, HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ProductNoTargetException.class)
+    public ResponseEntity<ErrorResponseDto> productExceptionHandler(ProductNoTargetException e) {
+        final ErrorResponseDto response = ErrorResponseDto.create()
+            .code(ErrorCode.NO_TARGET_PRODUCT.getCode())
+            .status(ErrorCode.NO_TARGET_PRODUCT.getStatus())
+            .message(ErrorCode.NO_TARGET_PRODUCT.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }

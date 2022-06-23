@@ -2,6 +2,7 @@ package com.waw.entity;
 
 import com.waw.dto.ProductRequestDto;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,10 +12,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity(name = "TB_PRODUCT")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
 
@@ -28,8 +31,8 @@ public class Product {
     private int price;
 
     private String useYn = "Y";
-    private LocalDateTime createDate = LocalDateTime.now();
-    private LocalDateTime updateDate = LocalDateTime.now();
+    private String createDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    private String updateDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
     @Builder
     public Product(ProductRequestDto productDto) {

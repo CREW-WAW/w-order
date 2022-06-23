@@ -1,12 +1,12 @@
 package com.waw.exception;
 
-public class ProductNotFoundException extends Exception {
+public class ProductNoTargetException extends NullPointerException {
 
     private static final long serialVersionUID = 1L;
 
-    private ErrorCode errorCode;
+    private final ErrorCode errorCode;
 
-    public ProductNotFoundException(ErrorCode errorCode) {
+    public ProductNoTargetException(ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
