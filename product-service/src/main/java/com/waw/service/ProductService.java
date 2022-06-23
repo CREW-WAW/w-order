@@ -6,8 +6,11 @@ import com.waw.dto.ProductRequestDto;
 import com.waw.dto.ProductResponseDto;
 import com.waw.entity.Product;
 import com.waw.entity.ProductRepository;
+import com.waw.exception.ErrorCode;
+import com.waw.exception.ProductNoTargetException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -24,15 +27,20 @@ public class ProductService {
     private final ProductRepository repo;
 
     public ProductService(EntityManager em, ProductRepository repo) {
-        this.queryFactory =  new JPAQueryFactory(em);
+        this.queryFactory = new JPAQueryFactory(em);
         this.repo = repo;
     }
 
     public ProductResponseDto selectProduct(String idx) {
-        return new ProductResponseDto(
-            Objects.requireNonNull(
-                queryFactory.selectFrom(product).where(product.useYn.eq("Y").and(product.idx.eq(Long.valueOf(idx))))
-                    .fetchOne()));
+        Product targetProduct = queryFactory.selectFrom(product)
+            .where(product.useYn.eq("Y").and(product.idx.eq(Long.valueOf(idx))))
+            .fetchOne();
+
+        if (targetProduct == null) {
+            throw new ProductNoTargetException(ErrorCode.NO_TARGET_PRODUCT);
+        }
+
+        return new ProductResponseDto(targetProduct);
     }
 
     public List<ProductResponseDto> selectProductList(String searchType, String searchParam) {
@@ -64,21 +72,31 @@ public class ProductService {
 
     @Transactional
     public ProductResponseDto updateProductData(String idx, ProductRequestDto dto) {
-        Product targetProduct = Product.builder().productDto(dto).build();
-        targetProduct.setIdx(Long.valueOf(idx));
+        System.out.println("0000");
+        Optional<Product> targetProduct = repo.findById(Long.valueOf(idx));
+        System.out.println("1111");
 
-        Product resProduct = repo.save(targetProduct);
+        if (!targetProduct.isPresent()) {
+            throw new ProductNoTargetException(ErrorCode.NO_TARGET_PRODUCT);
+        }
+
+        Product targetProductObj = Product.builder().productDto(dto).build();
+        Product resProduct = repo.save(targetProductObj);
 
         return new ProductResponseDto(resProduct);
     }
 
     @Transactional
-    public ProductResponseDto deleteProductData(String idx) {
-        Product targetProduct = repo.findById(Long.valueOf(idx)).get();
-        targetProduct.setUseYn("N");
+    public boolean deleteProductData(String idx) {
+        Optional<Product> targetProduct = repo.findById(Long.valueOf(idx));
 
-        Product resProduct = repo.save(targetProduct);
+        if (!targetProduct.isPresent()) {
+            throw new ProductNoTargetException(ErrorCode.NO_TARGET_PRODUCT);
+        }
 
-        return new ProductResponseDto(resProduct);
+        targetProduct.get().setUseYn("N");
+        repo.save(targetProduct.get());
+
+        return true;
     }
 }
