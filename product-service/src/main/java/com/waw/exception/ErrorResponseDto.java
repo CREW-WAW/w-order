@@ -32,8 +32,7 @@ public class ErrorResponseDto {
         return new ErrorResponseDto();
     }
 
-    public ErrorResponseDto(int status, String code, String message) {
-        this.status = status;
+    public ErrorResponseDto(String code, String message) {
         this.code = code;
         this.message = message;
     }
