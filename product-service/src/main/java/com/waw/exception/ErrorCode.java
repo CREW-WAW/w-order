@@ -5,16 +5,19 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
-    NOT_EXIST_PRODUCT_LIST(801, "P001", "상품 목록 데이터가 없습니다."),
-    PRODUCT_NOT_FOUND(802, "P002", "등록할 상품을 등록해주세요."),
-    NO_TARGET_PRODUCT(803, "P003", "대상 상품이 없습니다.");
+    COMMON_CHECK_PARAMETER("C001", "파라미터를 확인해 주세요.."),
+
+    PRODUCT_NOT_EXIST_LIST( "P001", "상품 목록 데이터가 없습니다."),
+    PRODUCT_NO_TARGET("P002", "대상 상품이 없습니다."),
+
+    KAFKA_NO_DATA("K001", "카프카 데이터가 없습니다."),
+    KAFKA_PRODUCER_CHECK("K001", "카프카 프로듀서를 확인하세요."),
+    KAFKA_CONSUMER_CHECK("K002", "카프카 컨슈머를 홛인하세요.");
 
     private final String code;
     private final String message;
-    private final int status;
 
-    ErrorCode(final int status, final String code, final String message) {
-        this.status = status;
+    ErrorCode(final String code, final String message) {
         this.message = message;
         this.code = code;
     }

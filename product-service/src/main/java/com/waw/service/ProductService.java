@@ -7,9 +7,8 @@ import com.waw.dto.ProductResponseDto;
 import com.waw.entity.Product;
 import com.waw.entity.ProductRepository;
 import com.waw.exception.ErrorCode;
-import com.waw.exception.ProductNoTargetException;
+import com.waw.exception.ProductDataException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
@@ -32,15 +31,15 @@ public class ProductService {
     }
 
     public ProductResponseDto selectProduct(String idx) {
-        Product targetProduct = queryFactory.selectFrom(product)
+        Optional<Product> targetProduct = Optional.ofNullable(queryFactory.selectFrom(product)
             .where(product.useYn.eq("Y").and(product.idx.eq(Long.valueOf(idx))))
-            .fetchOne();
+            .fetchOne());
 
-        if (targetProduct == null) {
-            throw new ProductNoTargetException(ErrorCode.NO_TARGET_PRODUCT);
+        if (targetProduct.isEmpty()) {
+            throw new ProductDataException(ErrorCode.PRODUCT_NO_TARGET);
         }
 
-        return new ProductResponseDto(targetProduct);
+        return new ProductResponseDto(targetProduct.get());
     }
 
     public List<ProductResponseDto> selectProductList(String searchType, String searchParam) {
@@ -54,13 +53,20 @@ public class ProductService {
                 try {
                     builder.and(product.price.loe(Integer.valueOf(searchParam)));
                 } catch (NumberFormatException e) {
-                    log.error("Error, Price 값 확인");
+                    throw new ProductDataException(ErrorCode.COMMON_CHECK_PARAMETER);
                 }
                 break;
         }
 
-        return queryFactory.selectFrom(product).where(builder).fetch().stream()
+        List<ProductResponseDto> productList = queryFactory.selectFrom(product).where(builder)
+            .fetch().stream()
             .map(ProductResponseDto::new).collect(Collectors.toList());
+
+        if (productList.size() == 0) {
+            throw new ProductDataException(ErrorCode.PRODUCT_NOT_EXIST_LIST);
+        }
+
+        return productList;
     }
 
     @Transactional
@@ -76,8 +82,8 @@ public class ProductService {
         Optional<Product> targetProduct = repo.findById(Long.valueOf(idx));
         System.out.println("1111");
 
-        if (!targetProduct.isPresent()) {
-            throw new ProductNoTargetException(ErrorCode.NO_TARGET_PRODUCT);
+        if (targetProduct.isEmpty()) {
+            throw new ProductDataException(ErrorCode.PRODUCT_NO_TARGET);
         }
 
         Product targetProductObj = Product.builder().productDto(dto).build();
@@ -90,8 +96,8 @@ public class ProductService {
     public boolean deleteProductData(String idx) {
         Optional<Product> targetProduct = repo.findById(Long.valueOf(idx));
 
-        if (!targetProduct.isPresent()) {
-            throw new ProductNoTargetException(ErrorCode.NO_TARGET_PRODUCT);
+        if (targetProduct.isEmpty()) {
+            throw new ProductDataException(ErrorCode.PRODUCT_NO_TARGET);
         }
 
         targetProduct.get().setUseYn("N");
