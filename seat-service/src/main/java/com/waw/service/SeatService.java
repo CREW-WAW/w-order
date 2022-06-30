@@ -31,7 +31,7 @@ public class SeatService {
 
         return new SeatResponseDto(
             Objects.requireNonNull(
-                queryFactory.selectFrom(seat).where(seat.orderNum.eq(Long.valueOf(idx)))
+                queryFactory.selectFrom(seat).where(seat.seatNum.eq(Long.valueOf(idx)))
                     .fetchOne()));
     }
 
@@ -43,9 +43,9 @@ public class SeatService {
     }
 
     @Transactional
-    public SeatResponseDto insertSeatData(SeatRequestDto seat,int idx) {
-        seat.setOrderNum(idx);
-        if(repo.findById(Long.valueOf(idx)).isPresent()){
+    public SeatResponseDto insertSeatData(SeatRequestDto seat,long idx) {
+        seat.setSeatNum(idx);
+        if(repo.findById(idx).isPresent()){
             return null;
         } else {
            Seat resSeat = repo.save(Seat.builder().seatDto(seat).build());
@@ -54,10 +54,10 @@ public class SeatService {
     }
 
     @Transactional
-    public String deleteSeatData(int idx) {
+    public String deleteSeatData(long idx) {
         String result = "";
-        if(repo.findById(Long.valueOf(idx)).isPresent()){
-            Seat findSeat = repo.findById(Long.valueOf(idx)).get();
+        if(repo.findById(idx).isPresent()){
+            Seat findSeat = repo.findById(idx).get();
             repo.delete(findSeat);
             result = "성공";
         } else {
@@ -67,9 +67,9 @@ public class SeatService {
     }
 
     @Transactional
-    public SeatResponseDto updateSeatData(SeatRequestDto seat, int idx) {
-        seat.setOrderNum(idx);
-        if(repo.findById(Long.valueOf(idx)).isPresent()){
+    public SeatResponseDto updateSeatData(SeatRequestDto seat, long idx) {
+        seat.setSeatNum(idx);
+        if(repo.findById(idx).isPresent()){
             Seat resSeat = repo.save(Seat.builder().seatDto(seat).build());
             return new SeatResponseDto(resSeat);
         } else {

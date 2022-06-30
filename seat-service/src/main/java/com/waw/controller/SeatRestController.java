@@ -44,17 +44,17 @@ public class SeatRestController {
 	}
 
 	@DeleteMapping("/deleteSeat/{idx}")
-	public String deleteSeat(@PathVariable int idx){
+	public String deleteSeat(@PathVariable long idx){
 		return service.deleteSeatData(idx);
 	}
 
 	@PostMapping("/insertSeat/{idx}")
-	public ApiResponseDto insertSeat(@RequestBody SeatRequestDto request, @PathVariable int idx) {
+	public ApiResponseDto insertSeat(@RequestBody SeatRequestDto request, @PathVariable long idx) {
 		return new ApiResponseDto(service.insertSeatData(request,idx));
 	}
 
 	@PutMapping("/updateSeat/{idx}")
-	public ApiResponseDto updateSeat(@RequestBody SeatRequestDto request, @PathVariable int idx) {
+	public ApiResponseDto updateSeat(@RequestBody SeatRequestDto request, @PathVariable long idx) {
 		return new ApiResponseDto(service.updateSeatData(request,idx));
 	}
 }

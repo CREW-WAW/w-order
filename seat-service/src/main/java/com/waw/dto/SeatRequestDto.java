@@ -9,7 +9,10 @@ import lombok.ToString;
 @ToString
 public class SeatRequestDto {
 
-    private int orderNum;
-    private int totalPrice;
-    private String userId;
+    private long seatNum;
+    private String ownerId;
+    private String tableNm;
+    private String LimitPer;
+    private String useYn;
+    private String status;
 }

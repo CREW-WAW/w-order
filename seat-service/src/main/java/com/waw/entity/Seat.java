@@ -17,17 +17,23 @@ public class Seat {
 
     @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long orderNum;
-    private long totalPrice;
-    private String userId;
+    private Long seatNum;
+    private String ownerId;
+    private String tableNm;
+    private String LimitPer;
+    private String useYn;
+    private String status;
     private LocalDateTime createDate = LocalDateTime.now();
     private LocalDateTime updateDate = LocalDateTime.now();
 
     @Builder
     public Seat(SeatRequestDto seatDto) {
-        this.orderNum = seatDto.getOrderNum();
-        this.totalPrice = seatDto.getTotalPrice();
-        this.userId = seatDto.getUserId();
+        this.seatNum = seatDto.getSeatNum();
+        this.ownerId = seatDto.getOwnerId();
+        this.tableNm = seatDto.getTableNm();
+        this.LimitPer = seatDto.getLimitPer();
+        this.useYn = seatDto.getUseYn();
+        this.status = seatDto.getStatus();
     }
 
 }
