@@ -1,0 +1,27 @@
+server:
+  port: 8086
+
+eureka:
+  instance:
+    instance-id: seat-microservice-instance
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8888/eureka
+
+spring:
+  application:
+    name: seat-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/waw?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimeZone=Asia/Seoul
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 'Ckdals0540@'
+  jpa:
+    database: mysql
+    generate-ddl: true
+    show-sql: true
+
+logging.level:
+  org.hibernate.SQL: debug
