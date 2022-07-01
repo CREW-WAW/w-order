@@ -13,28 +13,40 @@ public class ApiExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> exceptionHandler(Exception e) {
         final ErrorResponseDto response = ErrorResponseDto.create()
-            .status(HttpStatus.INTERNAL_SERVER_ERROR.value()).code("SYSTEM").message(e.getMessage());
+            .status(HttpStatus.INTERNAL_SERVER_ERROR.value()).code("SYSTEM")
+            .message(e.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(ProductListNotFoundException.class)
-    public ResponseEntity<ErrorResponseDto> productListNotFountExceptionHandler(
-        ProductListNotFoundException e) {
+    @ExceptionHandler(CommonException.class)
+    public ResponseEntity<ErrorResponseDto> CommonException(
+        CommonException e) {
+        log.debug("Catch CommonException :: {}", e.getMessage());
         final ErrorResponseDto response = ErrorResponseDto.create()
-            .code(ErrorCode.PRODUCT_NOT_FOUND.getCode())
-            .status(ErrorCode.PRODUCT_NOT_FOUND.getStatus())
-            .message(ErrorCode.PRODUCT_NOT_FOUND.getMessage());
+            .code(e.getErrorCode().getCode())
+            .message(e.getErrorCode().getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ProductNoTargetException.class)
-    public ResponseEntity<ErrorResponseDto> productExceptionHandler(ProductNoTargetException e) {
+    @ExceptionHandler(ProductDataException.class)
+    public ResponseEntity<ErrorResponseDto> ProductDataException(
+        ProductDataException e) {
+        log.debug("Catch ProductDataException :: {}", e.getMessage());
         final ErrorResponseDto response = ErrorResponseDto.create()
-            .code(ErrorCode.NO_TARGET_PRODUCT.getCode())
-            .status(ErrorCode.NO_TARGET_PRODUCT.getStatus())
-            .message(ErrorCode.NO_TARGET_PRODUCT.getMessage());
+            .code(e.getErrorCode().getCode())
+            .message(e.getErrorCode().getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(KafkaDataException.class)
+    public ResponseEntity<ErrorResponseDto> KafkaDataException(KafkaDataException e) {
+        log.debug("Catch KafkaDataException :: {}", e.getMessage());
+        final ErrorResponseDto response = ErrorResponseDto.create()
+            .code(e.getErrorCode().getCode())
+            .message(e.getErrorCode().getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
